@@ -5,6 +5,7 @@ const CitiesContext = createContext();
 
 function CitiesProvider({ children }) {
   const [cities, setCities] = useState([]);
+  const [currentCity, setCurrentCity] = useState({});
 
   useEffect(function () {
     async function fetchCities() {
@@ -15,10 +16,18 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
+  async function getCity(id) {
+    const res = await fetch(`${BASE_URL}/cities/${id}`);
+    const data = await res.json();
+    setCurrentCity(data);
+  }
+
   return (
     <CitiesContext.Provider
       value={{
         cities,
+        currentCity,
+        getCity,
       }}
     >
       {children}
